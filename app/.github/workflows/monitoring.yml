@@ -1,0 +1,25 @@
+name: Deploy monitoring stack to EC2
+
+on:
+  push:
+    paths:
+      - 'monitoring/**'
+
+jobs:
+  deploy-monitoring:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Connect to EC2 and deploy monitoring stack
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /ruta/a/tu/proyecto
+            git pull
+            docker compose up -d prometheus grafana
